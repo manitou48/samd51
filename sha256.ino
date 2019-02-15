@@ -1,12 +1,12 @@
 // sha256 part of icm.h
 //  user must do last block padding etc.
-// region 0   TODO random hash value?
+// region 0
 
 #define PRREG(x) Serial.print(#x" 0x"); Serial.println(x,HEX)
 
 static IcmDescriptor dscr __attribute__((aligned(64)));  // RADDR RCFG RCTRL RNEXT
 static uint8_t hash[128] __attribute__((aligned(128)));
-static uint8_t blocks[256*64];  // data
+static uint8_t blocks[256 * 64]; // data
 
 void prhash(unsigned char *h, int n) {
   int i;
@@ -49,7 +49,7 @@ void setup() {
 
   dscr.RADDR.reg = (uint32_t)blocks;
   dscr.RCFG.reg = ICM_RCFG_ALGO(1) | ICM_RCFG_EOM_YES;  //RSA256
-  dscr.RCTRL.reg = sizeof(blocks);
+  dscr.RCTRL.reg = sizeof(blocks) / 64; // number of blocks
   dscr.RNEXT.reg = 0;
   REG_ICM_DSCR = (uint32_t) &dscr;
   REG_ICM_HASH = (uint32_t) hash;
@@ -65,7 +65,6 @@ void setup() {
   PRREG(REG_ICM_CFG);
   PRREG(REG_ICM_CTRL);
   PRREG(REG_ICM_SR);
-  PRREG(REG_ICM_UIHVAL0);
   PRREG(dscr.RADDR.reg);
   PRREG(dscr.RCFG.reg);
   PRREG(dscr.RCTRL.reg);
