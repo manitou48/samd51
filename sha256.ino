@@ -4,7 +4,7 @@
 
 #define PRREG(x) Serial.print(#x" 0x"); Serial.println(x,HEX)
 
-static IcmDescriptor dscr __attribute__((aligned(64)));  // RADDR RCFG RCTRL RNEXT
+static IcmDescriptor dscr[4] __attribute__((aligned(64)));  // RADDR RCFG RCTRL RNEXT
 static uint8_t hash[128] __attribute__((aligned(128)));
 static uint8_t blocks[256 * 64]; // data
 
@@ -47,10 +47,10 @@ void setup() {
   PRREG(REG_ICM_CTRL);
   PRREG(REG_ICM_SR);
 
-  dscr.RADDR.reg = (uint32_t)blocks;
-  dscr.RCFG.reg = ICM_RCFG_ALGO(1) | ICM_RCFG_EOM_YES;  //RSA256
-  dscr.RCTRL.reg = sizeof(blocks) / 64; // number of blocks
-  dscr.RNEXT.reg = 0;
+  dscr[0].RADDR.reg = (uint32_t)blocks;
+  dscr[0].RCFG.reg = ICM_RCFG_ALGO(1) | ICM_RCFG_EOM_YES;  //RSA256
+  dscr[0].RCTRL.reg = sizeof(blocks) / 64; // number of blocks
+  dscr[0].RNEXT.reg = 0;
   REG_ICM_DSCR = (uint32_t) &dscr;
   REG_ICM_HASH = (uint32_t) hash;
 
@@ -65,10 +65,10 @@ void setup() {
   PRREG(REG_ICM_CFG);
   PRREG(REG_ICM_CTRL);
   PRREG(REG_ICM_SR);
-  PRREG(dscr.RADDR.reg);
-  PRREG(dscr.RCFG.reg);
-  PRREG(dscr.RCTRL.reg);
-  PRREG(dscr.RNEXT.reg);
+  PRREG(dscr[0].RADDR.reg);
+  PRREG(dscr[0].RCFG.reg);
+  PRREG(dscr[0].RCTRL.reg);
+  PRREG(dscr[0].RNEXT.reg);
 }
 
 void loop() {
