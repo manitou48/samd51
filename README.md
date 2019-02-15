@@ -5,4 +5,5 @@ Files | Description
 ---|---
 aes.ino  |      AES CBC encrypt/decrypt
 crc32.ino  |    CRC32
+sha256.ino |  SHA256 needs work
 trng.ino   |    TRNG test
