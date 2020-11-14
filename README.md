@@ -4,7 +4,7 @@ https://www.adafruit.com/product/3857
 Files | Description
 ---|---
 aes.ino  |      AES CBC encrypt/decrypt
-capturePPW | capture PPW on A4  NOT WORKING ?
+capturePPW.ino | capture PPW on A4  DMA
 crc32.ino  |    CRC32
 m4temp.ino  | read ADC temperature sensors
 rtcdrift.ino |  RTC drift 32khz and oscillator
