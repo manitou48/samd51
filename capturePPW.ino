@@ -137,12 +137,14 @@ void setup() {
   while (!Serial);
   delay(1000);
   Serial.println("go");
-  //analogWrite(10,64);   //1381 hz  25% duty
-  pwmWrite(120, 60);  // pin 10  div, duty  120mhz/120 1 mhz
+  //analogWrite(10,64);   //1831 hz  25% duty
+  pwmWrite(120000, 60000);  // pin 10  div, duty  120mhz/120 1 mhz
   capture_init();
 }
 
 void loop() {
-  Serial.print(period); Serial.print(" "); Serial.println(pulseWidth);
+  Serial.print(period); Serial.print(" "); Serial.print(pulseWidth);
+  Serial.print("  period "); Serial.print(period / 30.); // DIV4  120/4
+  Serial.print(" us  pulse "); Serial.println(pulseWidth / 30.);
   delay(1000);
 }
