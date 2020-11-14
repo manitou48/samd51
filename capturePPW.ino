@@ -82,7 +82,7 @@ void capture_init() {
   GCLK->PCHCTRL[TCC1_GCLK_ID].reg = GCLK_PCHCTRL_CHEN |        // Enable the TCC1 perhipheral channel
                                     GCLK_PCHCTRL_GEN_GCLK0;    // Connect 120MHz generic clock 0 to TCC1
 
-  PORT->Group[PORTA].PINCFG[4].bit.PMUXEN = 1;   // A4 is PB4
+  PORT->Group[PORTA].PINCFG[4].bit.PMUXEN = 1;   // A4 is PA4
   PORT->Group[PORTA].PMUX[4 >> 1].reg |= PORT_PMUX_PMUXE(0);  //interrupt
   // PORT->Group[g_APinDescription[A4].ulPort].PINCFG[g_APinDescription[A4].ulPin].bit.PMUXEN = 1;
   // PORT->Group[g_APinDescription[A4].ulPort].PMUX[g_APinDescription[A4].ulPin >> 1].reg |= PORT_PMUX_PMUXE(0);
