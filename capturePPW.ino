@@ -42,7 +42,7 @@ void pwmWrite(int div, int duty) {
 }
 
 void capture_init() {
-  // setup PPW event capture of TCC1 clock with DMA, A4 interrupt PB04/EXTINT[4]
+  // setup PPW event capture of TCC1 clock with DMA, A4 interrupt PA04/EXTINT[4]
 
   // Enable DMAC
   DMAC->CTRL.bit.DMAENABLE = 0;                                     // Disable DMA to edit it
@@ -58,7 +58,7 @@ void capture_init() {
 
   // Set up DMAC Channel 0 transfer descriptior (what is being transfered to memory)
   descriptor.descaddr = (uint32_t)&descriptor_section[0];               // Set up a circular descriptor
-  descriptor.srcaddr = (uint32_t)&TCC1->CC[0].reg;                      // Take the contents of the TCC0 counter comapare 0 register
+  descriptor.srcaddr = (uint32_t)&TCC1->CC[0].reg;                      // Take the contents of the TCC1 counter comapare 0 register
   descriptor.dstaddr = (uint32_t)&period;                           // Copy it to the "dmacPeriod" variable
   descriptor.btcnt = 1;                                                 // Transfer only takes 1 beat
   descriptor.btctrl = DMAC_BTCTRL_BEATSIZE_WORD | DMAC_BTCTRL_VALID;   // Copy 32-bits (WORD) and flag discriptor as valid
@@ -72,19 +72,20 @@ void capture_init() {
 
   // // Set up DMAC Channel 1 transfer descriptior (what is being transfered to memory)
   descriptor.descaddr = (uint32_t)&descriptor_section[1];               // Set up a circular descriptor
-  descriptor.srcaddr = (uint32_t)&TCC1->CC[1].reg;                      // Take the contents of the TCC0 counter comapare 0 register
+  descriptor.srcaddr = (uint32_t)&TCC1->CC[1].reg;                      // Take the contents of the TCC1 counter comapare 0 register
   descriptor.dstaddr = (uint32_t)&pulseWidth;                           // Copy it to the "dmacPeriod" variable
   descriptor.btcnt = 1;                                                 // Transfer only takes 1 beat
   descriptor.btctrl = DMAC_BTCTRL_BEATSIZE_WORD | DMAC_BTCTRL_VALID;   // Copy 32-bits (WORD) and flag discriptor as valid
   memcpy(&descriptor_section[1], &descriptor, sizeof(dmacdescriptor));  // Copy to the channel 1
 
-  // configure TCC1 and A4  
+  // configure TCC1 and A4
   GCLK->PCHCTRL[TCC1_GCLK_ID].reg = GCLK_PCHCTRL_CHEN |        // Enable the TCC1 perhipheral channel
-                                    GCLK_PCHCTRL_GEN_GCLK0;    // Connect 120MHz generic clock 0 to TCC0
+                                    GCLK_PCHCTRL_GEN_GCLK0;    // Connect 120MHz generic clock 0 to TCC1
 
-  PORT->Group[PORTB].PINCFG[4].bit.PMUXEN = 1;   // A4 is PB4
-  PORT->Group[PORTB].PMUX[4 >> 1].reg |= PORT_PMUX_PMUXE(0);  //interrupt
-
+  PORT->Group[PORTA].PINCFG[4].bit.PMUXEN = 1;   // A4 is PB4
+  PORT->Group[PORTA].PMUX[4 >> 1].reg |= PORT_PMUX_PMUXE(0);  //interrupt
+  // PORT->Group[g_APinDescription[A4].ulPort].PINCFG[g_APinDescription[A4].ulPin].bit.PMUXEN = 1;
+  // PORT->Group[g_APinDescription[A4].ulPort].PMUX[g_APinDescription[A4].ulPin >> 1].reg |= PORT_PMUX_PMUXE(0);
   // configure EIC interrupt
   EIC->CTRLA.bit.ENABLE = 0;                        // Disable the EIC peripheral
   while (EIC->SYNCBUSY.bit.ENABLE);                 // Wait for synchronization
@@ -136,7 +137,7 @@ void setup() {
   while (!Serial);
   delay(1000);
   Serial.println("go");
-   //analogWrite(10,64);   //1381 hz  25% duty
+  //analogWrite(10,64);   //1381 hz  25% duty
   pwmWrite(120, 60);  // pin 10  div, duty  120mhz/120 1 mhz
   capture_init();
 }
